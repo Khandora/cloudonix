@@ -22,6 +22,14 @@ public class Server extends AbstractVerticle {
     public static void main(String[] args) {
         Server server = new Server();
         server.startServer();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                server.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
     private void startServer() {
@@ -134,6 +142,7 @@ public class Server extends AbstractVerticle {
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
                 words.addAll(reader.lines().toList());
+                uniqueWords.addAll(reader.lines().toList());
             } catch (IOException e) {
                 e.printStackTrace();
             }
